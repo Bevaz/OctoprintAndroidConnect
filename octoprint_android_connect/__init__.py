@@ -58,29 +58,41 @@ class AndroidConnectPlugin(octoprint.plugin.EventHandlerPlugin,
 
 	def get_api_commands(self):
 		return dict(
-			execute=["shell"]
+			execute=["shell", "ssid", "password"]
 		)
+
+	def execute_command(self, command_str):
+		import sarge
+		self.logger.error("Executing command: %s" % command_str)
+		try:
+			p = sarge.run(command_str, stdout=sarge.Capture(), stderr=sarge.Capture())
+			returncode = p.returncode
+			stderr_text = p.stderr.text
+			stdout_text = p.stdout.text
+			if returncode != 0:
+				self.logger.warn("Executed command success %r: <%s>-<%s>" % (returncode, stdout_text, stderr_text))
+				raise Exception(stdout_text)
+			return stdout_text
+		except:
+			self.logger.exception("Could not execute command due to unknown error")
+			raise Exception('error!!!')
+
 
 	def on_api_command(self, command, data):
 		if command == "execute":
 			self.logger.error("Command test is invoked")
-			import sarge
-			command_str = data["shell"]
-			self.logger.error("Executing command: %s" % command_str)
+			ssid = data["ssid"]
+			password = data["password"]
+			out = ''
 			try:
-				p = sarge.run(command_str, stdout=sarge.Capture(), stderr=sarge.Capture())
-				returncode = p.returncode
-				stderr_text = p.stderr.text
-				stdout_text = p.stdout.text
-				if returncode == 0:
-					self.logger.warn("Executed command success %r: <%s>-<%s>" % (returncode, stdout_text, stderr_text))
-					return flask.jsonify(dict(success=True, msg=str(stdout_text)))
-				else:
-					self.logger.warn("Execute command failed %r: <%s>-<%s>" % (returncode, stdout_text, stderr_text))
-					return flask.jsonify(dict(success=False, msg=str(stdout_text)))
-			except:
-				self.logger.exception("Could not execute command due to unknown error")
-				return flask.jsonify(dict(success=False, msg=str('error!!!')))
+				out += self.execute_command("service call wifi 28 i32 0 i32 0")
+				out += self.execute_command("service call wifi 13 i32 1")
+				out += self.execute_command("service call wifi 2 i32 1 i32 -1  i32 0 i32 0 s16 \\\"" + ssid + "\\\" i32 -1 s16 \\\"" + password + "\\\" i32 -1 i32 -1 i32 -1 i32 -1 i32 0 i32 1 i32 0 i32 1 i32 1 i32 2 i32 0 i32 1 i32 0 i32 2 i32 1 i32 2 i32 4 i32 0 i32 1 i32 2 i32 3 i32 -1 i32 -1 i32 -1 i32 -1 i32 -1 i32 -1 i32 1 i32 48 i32 -1 i32 -1 i32 -1 s16 DHCP s16 NONE s16 android.net.LinkProperties i32 -1 i32 0 i32 0 i32 0 i32 0")
+				out += self.execute_command("service call wifi 19")
+				out += self.execute_command("service call wifi 32")
+			except Exception as e:
+				flask.jsonify(dict(success=False, msg=str(e.args)))
+			return flask.jsonify(dict(success=True, msg=str(out)))
 
 		return flask.make_response("Unknown command", 400)
 
@@ -92,7 +104,9 @@ class AndroidConnectPlugin(octoprint.plugin.EventHandlerPlugin,
 	def on_settings_load(self):
 		self.logger.warn("Invoking <on_settings_load>")
 		return dict(
-			shell=""
+			shell="",
+			ssid="",
+			password=""
 		)
 
 

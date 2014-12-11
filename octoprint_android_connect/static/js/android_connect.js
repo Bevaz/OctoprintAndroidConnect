@@ -30,6 +30,8 @@ $(function() {
 
         self.chooseInstance = function(data) {
             self.settings.plugins.android_connect.shell(data.shell);
+            self.settings.plugins.android_connect.ssid(data.ssid);
+            self.settings.plugins.android_connect.password(data.password);
         };
 
         self.execConfiguration = function() {
@@ -39,10 +41,14 @@ $(function() {
             self.execMessage("");
 
             var shell = self.settings.plugins.android_connect.shell();
+            var ssid = self.settings.plugins.android_connect.ssid();
+            var password = self.settings.plugins.android_connect.password();
 
             var payload = {
                 command: "execute",
-                shell: shell
+                shell: shell,
+                ssid: ssid,
+                password: password
             };
 
             $.ajax({
