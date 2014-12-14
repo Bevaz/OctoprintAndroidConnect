@@ -100,6 +100,16 @@ class AndroidConnectPlugin(octoprint.plugin.EventHandlerPlugin,
 					sleep(1)
 				out += self.execute_command("service call wifi 2 i32 1 i32 -1  i32 0 i32 0 s16 \\\"" + ssid + "\\\" i32 -1 s16 \\\"" + password + "\\\" i32 -1 i32 -1 i32 -1 i32 -1 i32 0 i32 1 i32 0 i32 1 i32 1 i32 2 i32 0 i32 1 i32 0 i32 2 i32 1 i32 2 i32 4 i32 0 i32 1 i32 2 i32 3 i32 -1 i32 -1 i32 -1 i32 -1 i32 -1 i32 -1 i32 1 i32 48 i32 -1 i32 -1 i32 -1 s16 DHCP s16 NONE s16 android.net.LinkProperties i32 -1 i32 0 i32 0 i32 0 i32 0")
 				out += self.execute_command("service call wifi 19")
+				out += self.execute_command("service call wifi 13 i32 0")
+				for i in range (0,30):
+					if self.execute_command("service call wifi 14").count("00000000 00000001") > 0:
+						break
+					sleep(1)
+				out += self.execute_command("service call wifi 13 i32 1")
+				for i in range (0,30):
+					if self.execute_command("service call wifi 14").count("00000000 00000003") > 0:
+						break
+					sleep(1)
 				out += self.execute_command("service call wifi 32")
 			except Exception as e:
 				flask.jsonify(dict(success=False, msg=str(e.args)))
