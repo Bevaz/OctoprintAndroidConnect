@@ -29,12 +29,17 @@ class AndroidConnectPlugin(octoprint.plugin.EventHandlerPlugin,
 	def on_after_startup(self):
 		self.logger.warn("Invoking <on_after_startup>")
 
+	def checkWifiMode(self):
+		if self.execute_command("service call wifi 29").count("00000000 0000000d") > 0:
+			return "AP"
+		return "Client"
 
 	#~~ TemplatePlugin API
-
 	def get_template_vars(self):
+		wifiMode = self.checkWifiMode()
 		return dict(
-			_settings_menu_entry="AndroidConnect"
+			_settings_menu_entry="Configure Wi-Fi",
+			_config_wifi_mode=wifiMode
 		)
 
 	def get_template_folder(self):
@@ -58,7 +63,8 @@ class AndroidConnectPlugin(octoprint.plugin.EventHandlerPlugin,
 
 	def get_api_commands(self):
 		return dict(
-			wifiConnect=["shell", "ssid", "password"]
+			wifiConnect=["ssid", "password"],
+			startAP=["ssid", "password"]
 		)
 
 	def execute_command(self, command_str):
@@ -81,7 +87,7 @@ class AndroidConnectPlugin(octoprint.plugin.EventHandlerPlugin,
 
 	def on_api_command(self, command, data):
 		if command == "wifiConnect":
-			self.logger.warn("Command execute is invoked")
+			self.logger.warn("Command wifiConnect is invoked")
 			ssid = data["ssid"]
 			password = data["password"]
 			out = ''
@@ -97,7 +103,20 @@ class AndroidConnectPlugin(octoprint.plugin.EventHandlerPlugin,
 				out += self.execute_command("service call wifi 32")
 			except Exception as e:
 				flask.jsonify(dict(success=False, msg=str(e.args)))
-			return flask.jsonify(dict(success=True, msg=str(out)))
+			self.logger.warn("Command wifiConnect output is %s", out)
+			return flask.jsonify(dict(success=True, msg=str("")))
+		if command == "startAP":
+			self.logger.warn("Command startAP is invoked")
+			ssid = data["ssid"]
+			password = data["password"]
+			out = ''
+			try:
+				out += self.execute_command("service call wifi 13 i32 0")
+				out += self.execute_command("service call wifi 28 i32 0 i32 1")
+			except Exception as e:
+				flask.jsonify(dict(success=False, msg=str(e.args)))
+			self.logger.warn("Command startAP output is %s", out)
+			return flask.jsonify(dict(success=True, msg=str("")))
 
 		return flask.make_response("Unknown command", 400)
 
@@ -109,7 +128,6 @@ class AndroidConnectPlugin(octoprint.plugin.EventHandlerPlugin,
 	def on_settings_load(self):
 		self.logger.warn("Invoking <on_settings_load>")
 		return dict(
-			shell="",
 			ssid="",
 			password=""
 		)

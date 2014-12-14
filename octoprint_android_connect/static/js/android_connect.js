@@ -40,13 +40,47 @@ $(function() {
             self.execSuccessful(false);
             self.execMessage("");
 
-            var shell = self.settings.plugins.android_connect.shell();
             var ssid = self.settings.plugins.android_connect.ssid();
             var password = self.settings.plugins.android_connect.password();
 
             var payload = {
                 command: "wifiConnect",
-                shell: shell,
+                ssid: ssid,
+                password: password
+            };
+
+            $.ajax({
+                url: API_BASEURL + "plugin/android_connect",
+                type: "POST",
+                dataType: "json",
+                data: JSON.stringify(payload),
+                contentType: "application/json; charset=UTF-8",
+                success: function(response) {
+                    self.execResult(true);
+                    self.execSuccessful(false);
+                    if (response.hasOwnProperty("msg")) {
+                        self.execMessage(response.msg.concat(" <", response.success.toString(), ">"));
+                    } else {
+                        self.execMessage(undefined);
+                    }
+                },
+                complete: function() {
+                    self.execActive(false);
+                }
+            });
+        };
+
+        self.startAP = function() {
+            self.execActive(true);
+            self.execResult(false);
+            self.execSuccessful(false);
+            self.execMessage("");
+
+            var ssid = self.settings.plugins.android_connect.ssid();
+            var password = self.settings.plugins.android_connect.password();
+
+            var payload = {
+                command: "startAP",
                 ssid: ssid,
                 password: password
             };

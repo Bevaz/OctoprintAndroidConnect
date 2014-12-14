@@ -1,27 +1,26 @@
 <div id="settings_plugin_android_connect_dialog" data-bind="allowBindings: true">
-    <h2>{{ _('Execute command') }}</h2>
-
-    <form class="form-horizontal">
-        <div class="control-group">
-            <label class="control-label" for="settings-android_connect-shell">{{ _('Shell') }}</label>
-            <div class="controls">
-                <input type="text" class="input-block-level" data-bind="value: settings.plugins.android_connect.shell" id="settings-android_connect-shell">
+    <h2>{{ _('Configure WiFi mode') }}</h2>
+    <h2>{{ settingsPlugins["android_connect"]._config_wifi_mode }}</h2>
+    {% if settingsPlugins["android_connect"]._config_wifi_mode == "Client" %}
+        {{ _('You are connected to Wi-Fi Network. Start Wi-Fi Access Point.') }}<br>
+        <button class="btn" data-bind="click: function() { startAP() }"><i class="icon-spinner icon-spin" data-bind="visible: execActive()"></i> {{ _('Start Wi-Fi Access Point') }}</button> <span data-bind="visible: execResult() && execSuccessful()">{{ _('Sent successfully') }}</span><span data-bind="visible: execResult() && !execSuccessful()">{{ _('Sending failed') }}: <span data-bind="text: execMessage"></span></span>
+    {% else %}
+        {{ _('Access Point mode is enabled. Connect to Wi-Fi Network.') }}<br>
+        <form class="form-horizontal">
+            <div class="control-group">
+                <label class="control-label" for="settings-android_connect-ssid">{{ _('SSID') }}</label>
+                <div class="controls">
+                    <input type="text" class="input-block-level" data-bind="value: settings.plugins.android_connect.ssid" id="settings-android_connect-ssid">
+                </div>
             </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label" for="settings-android_connect-ssid">{{ _('SSID') }}</label>
-            <div class="controls">
-                <input type="text" class="input-block-level" data-bind="value: settings.plugins.android_connect.ssid" id="settings-android_connect-ssid">
+            <div class="control-group">
+                <label class="control-label" for="settings-android_connect-password">{{ _('Password') }}</label>
+                <div class="controls">
+                    <input type="password" class="input-block-level" data-bind="value: settings.plugins.android_connect.password" id="settings-android_connect-password">
+                </div>
             </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label" for="settings-android_connect-password">{{ _('Password') }}</label>
-            <div class="controls">
-                <input type="password" class="input-block-level" data-bind="value: settings.plugins.android_connect.password" id="settings-android_connect-password">
-            </div>
-        </div>
-    </form>
-
-    <button class="btn" data-bind="click: function() { wifiConnect() }"><i class="icon-spinner icon-spin" data-bind="visible: execActive()"></i> {{ _('Send exec notification') }}</button> <span data-bind="visible: execResult() && execSuccessful()">{{ _('Sent successfully') }}</span><span data-bind="visible: execResult() && !execSuccessful()">{{ _('Sending failed') }}: <span data-bind="text: execMessage"></span></span>
+        </form>
+        <button class="btn" data-bind="click: function() { wifiConnect() }"><i class="icon-spinner icon-spin" data-bind="visible: execActive()"></i> {{ _('Connect to Wi-Fi') }}</button> <span data-bind="visible: execResult() && execSuccessful()">{{ _('Sent successfully') }}</span><span data-bind="visible: execResult() && !execSuccessful()">{{ _('Sending failed') }}: <span data-bind="text: execMessage"></span></span>
+    {% endif %}
 
 </div>
