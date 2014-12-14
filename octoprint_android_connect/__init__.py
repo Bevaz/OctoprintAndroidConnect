@@ -88,7 +88,7 @@ class AndroidConnectPlugin(octoprint.plugin.EventHandlerPlugin,
 			try:
 				out += self.execute_command("service call wifi 28 i32 0 i32 0")
 				out += self.execute_command("service call wifi 13 i32 1")
-				for i in range (0:30):
+				for i in range (0,30):
 					if self.execute_command("service call wifi 14").count("00000000 00000003") > 0:
 						break
 					sleep(1)
