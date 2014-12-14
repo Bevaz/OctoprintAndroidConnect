@@ -34,7 +34,7 @@ $(function() {
             self.settings.plugins.android_connect.password(data.password);
         };
 
-        self.execConfiguration = function() {
+        self.wifiConnect = function() {
             self.execActive(true);
             self.execResult(false);
             self.execSuccessful(false);
@@ -45,7 +45,7 @@ $(function() {
             var password = self.settings.plugins.android_connect.password();
 
             var payload = {
-                command: "execute",
+                command: "wifiConnect",
                 shell: shell,
                 ssid: ssid,
                 password: password

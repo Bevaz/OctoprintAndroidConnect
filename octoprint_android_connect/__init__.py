@@ -58,12 +58,12 @@ class AndroidConnectPlugin(octoprint.plugin.EventHandlerPlugin,
 
 	def get_api_commands(self):
 		return dict(
-			execute=["shell", "ssid", "password"]
+			wifiConnect=["shell", "ssid", "password"]
 		)
 
 	def execute_command(self, command_str):
 		import sarge
-		self.logger.error("Executing command: %s" % command_str)
+		self.logger.warn("Executing command: %s" % command_str)
 		try:
 			p = sarge.run(command_str, stdout=sarge.Capture(), stderr=sarge.Capture())
 			returncode = p.returncode
@@ -72,6 +72,7 @@ class AndroidConnectPlugin(octoprint.plugin.EventHandlerPlugin,
 			if returncode != 0:
 				self.logger.warn("Executed command success %r: <%s>-<%s>" % (returncode, stdout_text, stderr_text))
 				raise Exception(stdout_text)
+			self.logger.warn("Success. Out:<%s> Error:<%s>" % (stdout_text, stderr_text))
 			return stdout_text
 		except:
 			self.logger.exception("Could not execute command due to unknown error")
@@ -79,8 +80,8 @@ class AndroidConnectPlugin(octoprint.plugin.EventHandlerPlugin,
 
 
 	def on_api_command(self, command, data):
-		if command == "execute":
-			self.logger.error("Command test is invoked")
+		if command == "wifiConnect":
+			self.logger.warn("Command execute is invoked")
 			ssid = data["ssid"]
 			password = data["password"]
 			out = ''

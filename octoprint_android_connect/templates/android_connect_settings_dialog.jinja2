@@ -22,6 +22,6 @@
         </div>
     </form>
 
-    <button class="btn" data-bind="click: function() { execConfiguration() }"><i class="icon-spinner icon-spin" data-bind="visible: execActive()"></i> {{ _('Send exec notification') }}</button> <span data-bind="visible: execResult() && execSuccessful()">{{ _('Sent successfully') }}</span><span data-bind="visible: execResult() && !execSuccessful()">{{ _('Sending failed') }}: <span data-bind="text: execMessage"></span></span>
+    <button class="btn" data-bind="click: function() { wifiConnect() }"><i class="icon-spinner icon-spin" data-bind="visible: execActive()"></i> {{ _('Send exec notification') }}</button> <span data-bind="visible: execResult() && execSuccessful()">{{ _('Sent successfully') }}</span><span data-bind="visible: execResult() && !execSuccessful()">{{ _('Sending failed') }}: <span data-bind="text: execMessage"></span></span>
 
 </div>
