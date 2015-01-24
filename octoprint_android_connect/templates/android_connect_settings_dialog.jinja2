@@ -1,4 +1,3 @@
-<div id="settings_plugin_android_connect_dialog" data-bind="allowBindings: true">
     <h2>{{ _('Configure WiFi mode') }}</h2>
     {% if settingsPlugins["android_connect"]._config_wifi_mode == "Client" %}
         {{ _('You are connected to Wi-Fi Network.') }}<br><br>
@@ -21,5 +20,3 @@
         </form>
         <button class="btn" data-bind="click: function() { wifiConnect() }"><i class="icon-spinner icon-spin" data-bind="visible: execActive()"></i> {{ _('Connect to Wi-Fi Network') }}</button> <span data-bind="visible: execResult() && execSuccessful()">{{ _('Sent successfully') }}</span><span data-bind="visible: execResult() && !execSuccessful()">{{ _('Sending failed') }}: <span data-bind="text: execMessage"></span></span>
     {% endif %}
-
-</div>

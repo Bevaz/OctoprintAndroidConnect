@@ -38,7 +38,7 @@ class AndroidConnectPlugin(octoprint.plugin.EventHandlerPlugin,
 	def get_template_vars(self):
 		wifiMode = self.checkWifiMode()
 		return dict(
-			_settings_menu_entry="Configure Wi-Fi",
+			_settings=dict(name="Configure Wi-Fi", custom_bindings=True),
 			_config_wifi_mode=wifiMode
 		)
 
@@ -153,3 +153,4 @@ class AndroidConnectPlugin(octoprint.plugin.EventHandlerPlugin,
 __plugin_name__ = "AndroidConnect"
 __plugin_description__ = "Setup Android Connection within Octoprint"
 __plugin_implementations__ = [AndroidConnectPlugin()]
+__plugin_version__ = "0.1.1"
