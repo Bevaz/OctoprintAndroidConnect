@@ -15,7 +15,7 @@ def package_data_dirs(source, sub_folders):
 
 def params():
 	name = "OctoPrint-Android-Connect"
-	version = "0.1.0"
+	version = "0.1.1"
 
 	description = "Adds support for connectivity setup within OctoPrint"
 	long_description = "TODO"
@@ -24,8 +24,8 @@ def params():
 	url = "http://extensio.ru"
 	license = "AGPLv3"
 
-	packages = ["octoprint_android_connect"]
-	package_data = {"octoprint_android_connect": package_data_dirs('octoprint_android_connect', ['static', 'templates'])}
+	packages = ["android_connect"]
+	package_data = {"android_connect": package_data_dirs('android_connect', ['static', 'templates'])}
 
 	include_package_data = True
 	zip_safe = False
@@ -33,7 +33,7 @@ def params():
 
 	entry_points = {
 		"octoprint.plugin": [
-			"android_connect = octoprint_android_connect"
+			"android_connect = android_connect"
 		]
 	}
 
