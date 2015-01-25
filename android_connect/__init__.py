@@ -38,19 +38,10 @@ class AndroidConnectPlugin(octoprint.plugin.EventHandlerPlugin,
 	def get_template_vars(self):
 		wifiMode = self.checkWifiMode()
 		return dict(
-			_settings=dict(name="Configure Wi-Fi", custom_bindings=True),
 			_config_wifi_mode=wifiMode
 		)
 
-	def get_template_folder(self):
-		import os
-		return os.path.join(os.path.dirname(os.path.realpath(__file__)), "templates")
-
 	##~~ AssetPlugin API
-
-	def get_asset_folder(self):
-		import os
-		return os.path.join(os.path.dirname(os.path.realpath(__file__)), "static")
 
 	def get_assets(self):
 		return {
@@ -150,7 +141,7 @@ class AndroidConnectPlugin(octoprint.plugin.EventHandlerPlugin,
 	def on_event(self, event, payload):
 		self.logger.warn("Invoking <on_event>")
 
-__plugin_name__ = "AndroidConnect"
+__plugin_name__ = "Configure Wi-Fi"
 __plugin_description__ = "Setup Android Connection within Octoprint"
 __plugin_implementations__ = [AndroidConnectPlugin()]
 __plugin_version__ = "0.1.1"

@@ -1,5 +1,5 @@
     <h2>{{ _('Configure WiFi mode') }}</h2>
-    {% if settingsPlugins["android_connect"]._config_wifi_mode == "Client" %}
+    {% if plugin_android_connect__config_wifi_mode == "Client" %}
         {{ _('You are connected to Wi-Fi Network.') }}<br><br>
         <button class="btn" data-bind="click: function() { startAP() }"><i class="icon-spinner icon-spin" data-bind="visible: execActive()"></i> {{ _('Start Wi-Fi Access Point') }}</button> <span data-bind="visible: execResult() && execSuccessful()">{{ _('Sent successfully') }}</span><span data-bind="visible: execResult() && !execSuccessful()">{{ _('Sending failed') }}: <span data-bind="text: execMessage"></span></span>
     {% else %}
