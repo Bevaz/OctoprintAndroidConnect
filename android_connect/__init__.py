@@ -76,6 +76,13 @@ class AndroidConnectPlugin(octoprint.plugin.EventHandlerPlugin,
 			raise Exception('error!!!')
 
 
+	def script_after(self):
+		try:
+			out = self.execute_command("sh -c \"if [ ! -z `busybox which android_connect_script_after.sh` ]; then android_connect_script_after.sh; fi\"")
+		except Exception as e:
+			self.logger.error("android_connect_script_after.sh failed with error %s", str(e.args))
+		self.logger.warn("Command script_after output is %s", out)
+
 	def on_api_command(self, command, data):
 		if command == "wifiConnect":
 			self.logger.warn("Command wifiConnect is invoked")
@@ -102,6 +109,7 @@ class AndroidConnectPlugin(octoprint.plugin.EventHandlerPlugin,
 						break
 					sleep(1)
 				out += self.execute_command("service call wifi 32")
+				self.script_after()
 			except Exception as e:
 				flask.jsonify(dict(success=False, msg=str(e.args)))
 			self.logger.warn("Command wifiConnect output is %s", out)
@@ -114,6 +122,7 @@ class AndroidConnectPlugin(octoprint.plugin.EventHandlerPlugin,
 			try:
 				out += self.execute_command("service call wifi 13 i32 0")
 				out += self.execute_command("service call wifi 28 i32 0 i32 1")
+				self.script_after()
 			except Exception as e:
 				flask.jsonify(dict(success=False, msg=str(e.args)))
 			self.logger.warn("Command startAP output is %s", out)
